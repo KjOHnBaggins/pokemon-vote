@@ -1,6 +1,6 @@
 import { procedure, router } from "../trpc";
 import * as trpc from "@trpc/server";
-import { z } from "zod";
+import { string, z } from "zod";
 import { PokemonClient } from "pokenode-ts";
 import { prisma } from "../utils/prisma";
 
@@ -12,7 +12,9 @@ export const appRouter = router({
       const pokemon = await api.getPokemonById(input?.id);
       return {
         name: pokemon.name,
-        sprites: pokemon.sprites.front_default,
+        sprites: {
+          front_default: pokemon.sprites.front_default || "",
+        },
       };
     }),
   castVote: procedure

@@ -62,7 +62,7 @@ const PokemonListing: React.FC<{
   return (
     <div className="flex flex-col items-center">
       <img
-        src={props.pokemon.sprites?.toString()}
+        src={props.pokemon.sprites?.front_default}
         className="w-64 h-64 object-cover"
         alt=""
       />
