@@ -3,7 +3,6 @@ import { getOptionsForVote } from "@/utils/getRandomPokemon";
 import React, { useMemo, useState } from "react";
 import { type } from "os";
 import { PostCreateOutput } from "./api/trpc/[trpc]";
-import { inferReactQueryProcedureOptions } from "@trpc/react-query";
 
 const btn =
   "inline-flex items-center justify-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500";
@@ -51,7 +50,8 @@ export default function Home() {
   );
 }
 
-type PokemonFromServer = inferQueryResponse<"getPokemonById">;
+// type PokemonFromServer = inferQueryResponse<getPokemonById>;
+type PokemonFromServer = PostCreateOutput;
 // type PokemonFromServer = inferReactQueryProcedureOptions;
 
 const PokemonListing: React.FC<{

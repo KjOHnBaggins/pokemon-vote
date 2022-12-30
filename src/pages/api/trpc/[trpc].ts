@@ -10,13 +10,11 @@ export default trpcNext.createNextApiHandler({
 });
 
 // Theo's v9 helper
-// export type inferQueryResponse
-// <TRouteKey extends keyof AppRouter["_def"]["queries"]>
-//  =
-// inferProcedureOutput<AppRouter["_def"]["queries"][TRouteKey]>;
+// export type inferQueryResponse<
+//   TRouteKey extends keyof AppRouter["getPokemonById"]
+// > = inferProcedureOutput<AppRouter["getPokemonById"][TRouteKey]>;
 
 export type RouterInput = inferRouterInputs<AppRouter>;
 export type RouterOutput = inferRouterOutputs<AppRouter>;
-
 export type PostCreateInput = RouterInput["getPokemonById"];
 export type PostCreateOutput = RouterOutput["getPokemonById"];
