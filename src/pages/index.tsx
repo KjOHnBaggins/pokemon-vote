@@ -1,9 +1,8 @@
 import { trpc } from "@/utils/trpc";
 import { getOptionsForVote } from "@/utils/getRandomPokemon";
-import React, { useMemo, useState } from "react";
-import { type } from "os";
+import React, { useState } from "react";
 import { PostCreateOutput } from "./api/trpc/[trpc]";
-import { isStringObject } from "util/types";
+import Image from "next/image";
 
 const btn =
   "inline-flex items-center justify-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500";
@@ -47,12 +46,14 @@ export default function Home() {
             </>
           )}
       </div>
+      <div className="absolute bottom-0 w-full text-xl text-center p-2">
+        <a href="https://github.com/KjOHnBaggins/pokemon-vote">Github</a>
+      </div>
     </div>
   );
 }
 
 // type PokemonFromServer = inferQueryResponse<getPokemonById>;
-// type PokemonFromServer = inferReactQueryProcedureOptions;
 type PokemonFromServer = PostCreateOutput;
 
 const PokemonListing: React.FC<{
@@ -61,9 +62,10 @@ const PokemonListing: React.FC<{
 }> = (props) => {
   return (
     <div className="flex flex-col items-center">
-      <img
+      <Image
         src={props.pokemon.sprites?.front_default}
-        className="w-64 h-64 object-cover"
+        width={256}
+        height={256}
         alt=""
       />
 
