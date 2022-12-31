@@ -1,6 +1,6 @@
 import { procedure, router } from "../trpc";
 import * as trpc from "@trpc/server";
-import { string, z } from "zod";
+import { z } from "zod";
 import { PokemonClient } from "pokenode-ts";
 import { prisma } from "../utils/prisma";
 
@@ -27,7 +27,8 @@ export const appRouter = router({
     .mutation(async ({ input }) => {
       const voteInDb = await prisma.vote.create({
         data: {
-          ...input,
+          votedFor: input.votedFor,
+          votedAgainst: input.votedAgainst,
         },
       });
       return { success: true, vote: voteInDb };
