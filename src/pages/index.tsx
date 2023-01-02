@@ -63,10 +63,10 @@ const PokemonListing: React.FC<{
   return (
     <div className="flex flex-col items-center">
       <Image
-        src={props.pokemon.sprites?.front_default}
+        src={props.pokemon.spritesUrl}
         width={256}
         height={256}
-        alt=""
+        alt="pokemon-img"
       />
 
       <div className="text-xl text-center capitalize mt-[-2rem]">
