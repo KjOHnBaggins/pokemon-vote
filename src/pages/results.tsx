@@ -31,26 +31,29 @@ const PokemonListing: React.FC<{ pokemon: PokemonQueryResult[number] }> = (
   props
 ) => {
   return (
-    <div className="flex">
+    <div className="flex border-b p-2 items-center">
       <Image
         src={props.pokemon.spritesUrl}
-        width={256}
-        height={256}
+        width={64}
+        height={64}
         alt="pokemon-img"
       />
+      <div className="capitalize">{props.pokemon.name}</div>
     </div>
   );
 };
 
 const ResultsPage: React.FC<{
-  pokemon: AsyncReturnType<typeof getPokemonInOrder>;
+  pokemon: PokemonQueryResult;
 }> = (props) => {
   return (
-    <div className="flex flex-col">
-      <h2>Results</h2>
-      {props.pokemon.map((currentPokemon) => {
-        return <PokemonListing pokemon={currentPokemon} key={index} />;
-      })}
+    <div className="flex flex-col items-center">
+      <h2 className="text-2xl p-4">Results</h2>
+      <div className="flex flex-col w-full max-w-2xl border">
+        {props.pokemon.map((currentPokemon, index) => {
+          return <PokemonListing pokemon={currentPokemon} key={index} />;
+        })}
+      </div>
     </div>
   );
 };
