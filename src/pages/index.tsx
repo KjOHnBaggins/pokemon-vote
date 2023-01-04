@@ -57,7 +57,6 @@ export default function Home() {
   );
 }
 
-// type PokemonFromServer = inferQueryResponse<getPokemonById>;
 type PokemonFromServer = PostCreateOutput;
 
 const PokemonListing: React.FC<{
