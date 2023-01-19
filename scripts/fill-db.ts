@@ -1,23 +1,28 @@
 import { prisma } from "../src/backend/utils/prisma";
-import { PokemonClient } from "pokenode-ts";
 
-const doBackfill = async () => {
-  const pokeApi = new PokemonClient();
-  const allPokemon = await pokeApi.listPokemons(0, 493);
+interface Character {
+  id: number;
+  name: string;
+  imageUrl: string;
+}
 
-  const formattedPokemon = allPokemon.results.map((p, index) => ({
-    id: index + 1,
-    name: (p as { name: string }).name,
-    spritesUrl: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-      index + 1
-    }.png`,
-  }));
-
-  const creation = await prisma.pokemon.createMany({
-    data: formattedPokemon,
+const dataCreate = async () => {
+  const character: Character[] = [];
+  for (let i = 21; i <= 500; i++) {
+    await fetch(`https://superheroapi.com/api/1268726273674195/${i}`)
+      .then((res) => res.json())
+      .then((res) => {
+        character.push({
+          id: parseInt(res.id),
+          name: res.name,
+          imageUrl: res.image.url,
+        });
+      })
+      .catch((e) => console.log(e));
+  }
+  const creation = await prisma.character.createMany({
+    data: character,
   });
-
-  console.log("Creation?", creation);
 };
 
-doBackfill();
+dataCreate();
