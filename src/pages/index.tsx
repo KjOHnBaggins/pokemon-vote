@@ -1,22 +1,22 @@
 import { trpc } from "@/utils/trpc";
-import { getOptionsForVote } from "@/utils/getRandomPokemon";
+import { getOptionsForVote } from "@/utils/getRandomCharacter";
 import React, { useState } from "react";
 import { PostCreateOutput } from "./api/trpc/[trpc]";
 import Image from "next/image";
 import Link from "next/link";
 
 const btn =
-  "inline-flex items-center justify-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500";
+  "w-24 h-24 sm:w-36 sm:h-12 lg:w-4/6 inline-flex self-center items-center justify-center border border-gray-300 shadow-sm font-medium rounded-full text-gray-700 bg-white hover:bg-neutral-400 hover:text-white focus:outline-none focus:ring-8 focus:ring-offset-2 focus:ring-neutral-400";
 
 export default function Home() {
   const [ids, updateIds] = useState(() => getOptionsForVote());
   const [first, second] = ids;
-  const firstPokemon = trpc.getPokemonById.useQuery({ id: first });
-  const secondPokemon = trpc.getPokemonById.useQuery({ id: second });
+  const firstCharacter = trpc.getCharacterById.useQuery({ id: first });
+  const secondCharacter = trpc.getCharacterById.useQuery({ id: second });
 
   const voteMutation = trpc.castVote.useMutation();
 
-  const voteForRoundest = (selected: number) => {
+  const voteForWinner = (selected: number) => {
     if (selected === first) {
       voteMutation.mutate({ votedFor: first, votedAgainst: second });
     } else {
@@ -26,25 +26,35 @@ export default function Home() {
   };
 
   const dataLoaded =
-    !firstPokemon.isLoading &&
-    firstPokemon.data &&
-    !secondPokemon.isLoading &&
-    secondPokemon.data;
+    !firstCharacter.isLoading &&
+    firstCharacter.data &&
+    !secondCharacter.isLoading &&
+    secondCharacter.data;
   return (
     <div className="h-screen w-screen flex flex-col justify-between items-center">
-      <div className="text-2xl text-center pt-8">Which pokimon is Rounder?</div>
-      <div className="p-2" />
+      <div className="text-center text-lg sm:text-2xl lg:text-4xl mt-2 md:mt-6">
+        Who Wins!
+      </div>
       {dataLoaded && (
-        <div className="border rounded p-8 flex justify-between items-center max-w-2xl">
-          <PokemonListing
-            pokemon={firstPokemon.data}
-            vote={() => voteForRoundest(first)}
-          />
-          <div className="p-8">Vs</div>
-          <PokemonListing
-            pokemon={secondPokemon.data}
-            vote={() => voteForRoundest(second)}
-          />
+        <div className="flex flex-col sm:flex-row justify-between items-center min-h-[75%] min-w-[80%] md:min-w-[60%] ">
+          <div className="flex self-start sm:self-center flex-row sm:flex-col justify-between md:items-center w-full">
+            <CharacterListing
+              character={firstCharacter.data}
+              vote={() => voteForWinner(first)}
+            />
+          </div>
+          <div className="flex flex-col m-8 w-[8%]">
+            <span className="text-xl sm:text-2xl lg:text-4xl self-start">
+              V
+            </span>
+            <span className="text-base sm:text-lg lg:text-2xl self-end">S</span>
+          </div>
+          <div className="flex self-end sm:self-center flex-row-reverse sm:flex-col justify-between md:items-center w-full">
+            <CharacterListing
+              character={secondCharacter.data}
+              vote={() => voteForWinner(second)}
+            />
+          </div>
         </div>
       )}
       {!dataLoaded && <img src="/rings.svg" className="w-48" />}
@@ -57,27 +67,30 @@ export default function Home() {
   );
 }
 
-type PokemonFromServer = PostCreateOutput;
+type CharacterFromServer = PostCreateOutput;
 
-const PokemonListing: React.FC<{
-  pokemon: PokemonFromServer;
+const CharacterListing: React.FC<{
+  character: CharacterFromServer;
   vote: () => void;
 }> = (props) => {
   return (
-    <div className="flex flex-col items-center">
-      <Image
-        src={props.pokemon.spritesUrl}
-        width={256}
-        height={256}
-        alt="pokemon-img"
-      />
-
-      <div className="text-xl text-center capitalize mt-[-2rem]">
-        {props.pokemon.name}
+    <>
+      <div className="flex flex-col items-center">
+        <Image
+          src={props.character.imageUrl}
+          width={356}
+          height={356}
+          alt="character-img"
+          className="h-48 w-full sm:w-32 object-cover md:h-full md:w-48 lg:w-64 rounded-2xl"
+        />
+        <div className="text-center capitalize text-base sm:text-2xl mt-4 sm:my-6">
+          {props.character.name}
+        </div>
       </div>
+
       <button className={btn} onClick={() => props.vote()}>
-        Rounder
+        Wins
       </button>
-    </div>
+    </>
   );
 };
