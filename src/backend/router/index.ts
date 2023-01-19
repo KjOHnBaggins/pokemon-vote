@@ -1,19 +1,19 @@
+import { prisma } from "../utils/prisma";
 import { procedure, router } from "../trpc";
 import * as trpc from "@trpc/server";
 import { z } from "zod";
-import { prisma } from "../utils/prisma";
 
 export const appRouter = router({
-  getPokemonById: procedure
+  getCharacterById: procedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
-      const pokemon = await prisma.pokemon.findFirst({
+      const character = await prisma.character.findFirst({
         where: { id: input?.id },
       });
 
-      if (!pokemon) throw new Error("lol doen't exist");
+      if (!character) throw new Error("lol doen't exist");
 
-      return pokemon;
+      return character;
     }),
   castVote: procedure
     .input(

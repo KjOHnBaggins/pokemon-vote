@@ -16,5 +16,5 @@ export default trpcNext.createNextApiHandler({
 
 export type RouterInput = inferRouterInputs<AppRouter>;
 export type RouterOutput = inferRouterOutputs<AppRouter>;
-export type PostCreateInput = RouterInput["getPokemonById"];
-export type PostCreateOutput = RouterOutput["getPokemonById"];
+export type PostCreateInput = RouterInput["getCharacterById"];
+export type PostCreateOutput = RouterOutput["getCharacterById"];
