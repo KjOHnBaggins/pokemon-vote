@@ -1,20 +1,18 @@
 import type { GetServerSideProps } from "next";
 import { prisma } from "@/backend/utils/prisma";
 import React from "react";
-import { inferAsyncReturnType } from "@trpc/server";
 import { AsyncReturnType } from "@/utils/ts-bs";
-import { type } from "os";
 import Image from "next/image";
 
-const getPokemonInOrder = async () => {
-  return await prisma.pokemon.findMany({
+const getCharacterInOrder = async () => {
+  return await prisma.character.findMany({
     orderBy: {
       VoteFor: { _count: "desc" },
     },
     select: {
       id: true,
       name: true,
-      spritesUrl: true,
+      imageUrl: true,
       _count: {
         select: {
           VoteFor: true,
@@ -25,46 +23,51 @@ const getPokemonInOrder = async () => {
   });
 };
 
-type PokemonQueryResult = AsyncReturnType<typeof getPokemonInOrder>;
+type CharacterQueryResult = AsyncReturnType<typeof getCharacterInOrder>;
 
-const generateCountPercent = (pokemon: PokemonQueryResult[number]) => {
-  const { VoteFor, VoteAgainst } = pokemon._count;
+const generateCountPercent = (character: CharacterQueryResult[number]) => {
+  const { VoteFor, VoteAgainst } = character._count;
   if (VoteFor + VoteAgainst === 0) return 0;
   return (VoteFor / (VoteFor + VoteAgainst)) * 100;
 };
 
-const PokemonListing: React.FC<{ pokemon: PokemonQueryResult[number] }> = (
-  props
-) => {
+const CharacterListing: React.FC<{
+  character: CharacterQueryResult[number];
+}> = (props) => {
   return (
     <div className="flex border-b p-2 items-center justify-between">
       <div className="flex items-center">
         <Image
-          src={props.pokemon.spritesUrl}
+          src={props.character.imageUrl}
           width={64}
           height={64}
-          alt="pokemon-img"
+          className="rounded-lg mr-3"
+          alt="character-img"
         />
-        <div className="capitalize">{props.pokemon.name}</div>
+        <div className="capitalize font-medium text-sm sm:text-xl">
+          {props.character.name}
+        </div>
       </div>
       <div className="pr-4">
-        {generateCountPercent(props.pokemon).toFixed(2) + "%"}
+        {generateCountPercent(props.character).toFixed(2) + "%"}
       </div>
     </div>
   );
 };
 
 const ResultsPage: React.FC<{
-  pokemon: PokemonQueryResult;
+  character: CharacterQueryResult;
 }> = (props) => {
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mx-3 sm:mx-12">
       <h2 className="text-2xl p-4">Results</h2>
-      <div className="flex flex-col w-full max-w-2xl border">
-        {props.pokemon
+      <div className="flex flex-col w-full max-w-2xl border rounded-lg">
+        {props.character
           .sort((a, b) => generateCountPercent(b) - generateCountPercent(a))
-          .map((currentPokemon, index) => {
-            return <PokemonListing pokemon={currentPokemon} key={index} />;
+          .map((currentCharacter, index) => {
+            return (
+              <CharacterListing character={currentCharacter} key={index} />
+            );
           })}
       </div>
     </div>
@@ -74,11 +77,11 @@ const ResultsPage: React.FC<{
 export default ResultsPage;
 
 export const getStaticProps: GetServerSideProps = async () => {
-  const pokemonOrdered = await getPokemonInOrder();
+  const characterOrdered = await getCharacterInOrder();
 
   return {
     props: {
-      pokemon: pokemonOrdered,
+      character: characterOrdered,
     },
     revalidate: 60,
   };

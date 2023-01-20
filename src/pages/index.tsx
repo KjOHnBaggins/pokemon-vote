@@ -80,6 +80,7 @@ const CharacterListing: React.FC<{
           src={props.character.imageUrl}
           width={356}
           height={356}
+          priority={true}
           alt="character-img"
           className="h-48 w-full sm:w-32 object-cover md:h-full md:w-48 lg:w-64 rounded-2xl"
         />
