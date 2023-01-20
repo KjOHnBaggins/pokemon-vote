@@ -20,9 +20,9 @@ const dataCreate = async () => {
       })
       .catch((e) => console.log(e));
   }
-  const creation = await prisma.character.createMany({
-    data: character,
-  });
+  // const creation = await prisma.character.createMany({
+  //   data: character,
+  // });
 };
 
 dataCreate();
