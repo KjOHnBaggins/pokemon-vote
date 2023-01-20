@@ -1,13 +1,9 @@
-## Pokemon-vote
+# Who Wins!
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Full stack Voting project
+###### Voting is active!
 
-Run the development server:
+- **Nextjs** app with **tRPC**, **Prisma** and **PlanetScale** for db, **TailWind** for styling ( *fully responsive* )
+- Comprised of **two** pages, **Voting** page and **Results** page ( *refreshes every 60 secs* )
 
-```bash
-npm run dev
-# or
-yarn dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
